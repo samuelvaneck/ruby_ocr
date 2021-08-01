@@ -1,0 +1,19 @@
+services:
+  web:
+    image: ghcr.io/samuelvaneck/ruby_ocr:latest
+    hostname: ruby_ocr
+    ports:
+      - 9292
+    environment:
+      VIRTUAL_HOST:      'your.url.com'
+      VIRTUAL_PORT:      9292
+      LETSENCRYPT_HOST:  'your.url.com'
+      LETSENCRYPT_EMAIL: 'email@url.com'
+    volumes:
+      - ./files:/app/lib/public/files
+    restart: always
+
+networks:
+  default:
+    external:
+      name: proxy
