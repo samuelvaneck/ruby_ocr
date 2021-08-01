@@ -1,14 +1,31 @@
 <form action="/upload" method="POST" enctype="multipart/form-data">
-  <div>
-    <label for="file">Select a file:</label>
-    <input type="file" id="file" name="file">
-  </div>
+  <p>
+    <div><label for="file">Select a file</label></div>
+    <div><input type="file" id="file" name="file" accept="image/png, image/gif, image/jpeg"></div>
+  </p>
 
-  <div>
+  <p>
+    <div><label for="language">Choose a language</label></div>
+    <div>
+      <select name="language" id="language">
+        <option value="eng">English</option>
+        <option value="nld">Dutch</option>
+        <option value="fra">French</option>
+        <option value="ita">Italian</option>
+        <option value="deu">German</option>
+        <option value="por">Portuguese</option>
+        <option value="spa">Spanish</option>
+      </select>
+    </div>
+  </p>
+
+  <p>
     <input type="submit" value="Submit">
-  </div>
+  </p>
 </form>
 
 <div>
-  <%= @text %>
+  <% @text&.split('\n')&.each do |line| %>
+    <div><%= line %></div>
+  <% end %>
 </div>
