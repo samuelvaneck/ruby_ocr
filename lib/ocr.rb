@@ -41,7 +41,7 @@ class OCR < Sinatra::Base
     erb :index, { layout: :application }
   end
 
-  post '/upload' do
+  post '/' do
     if params[:file]
       save_file_to_public_foler(params[:file])
       file_location = File.join(settings.files, params[:file][:filename])

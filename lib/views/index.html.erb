@@ -1,14 +1,15 @@
-<form action="/upload" method="POST" enctype="multipart/form-data">
-  <p>
-    <div><label for="file">Select a file</label></div>
-    <div><input type="file" id="file" name="file" accept="image/png, image/gif, image/jpeg"></div>
-  </p>
+<h2 class="my-3">Upload file</h2>
+<form action="/" method="POST" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label for="file" class="form-label">Select a file</label>
+    <input class="form-control" type="file" id="file" name="file" accept="image/png, image/gif, image/jpeg">
+  </div>
 
   <p>
     <div><label for="language">Choose a language</label></div>
     <div>
-      <select name="language" id="language">
-        <option value="eng">English</option>
+      <select name="language" id="language" class="form-select">
+        <option value="eng" selected>English</option>
         <option value="nld">Dutch</option>
         <option value="fra">French</option>
         <option value="ita">Italian</option>
@@ -20,12 +21,18 @@
   </p>
 
   <p>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Submit" class="btn btn-primary">
   </p>
 </form>
 
-<div>
-  <% @text&.split('\n')&.each do |line| %>
-    <div><%= line %></div>
-  <% end %>
-</div>
+<hr>
+
+<% unless @text.nil? %>
+  <h2 class="my-3">Text</h2>
+
+  <div class="mb-3">
+    <% @text.split("\n\n").each do |line| %>
+      <div class="my-2"><%= line %></div>
+    <% end %>
+  </div>
+<% end %>
