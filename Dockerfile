@@ -1,6 +1,14 @@
 FROM ruby:3.0.2-alpine3.14
 
-RUN apk update && apk add tesseract-ocr build-base poppler
+RUN apk update && apk add tesseract-ocr build-base poppler-utils
+RUN wget https://github.com/google/fonts/archive/main.tar.gz -O gf.tar.gz && \
+  tar -xf gf.tar.gz && \
+  mkdir -p /usr/share/fonts/truetype/google-fonts && \
+  find $PWD/fonts-main/ -name "*.ttf" -exec install -m644 {} /usr/share/fonts/truetype/google-fonts/ \; || return 1 && \
+  rm -f gf.tar.gz && \
+  rm -rf $PWD/fonts-main && \
+  rm -rf /var/cache/* && \
+  fc-cache -f
 
 RUN bundle config set deployment 'true'
 
