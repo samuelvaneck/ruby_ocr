@@ -1,6 +1,6 @@
 FROM ruby:3.0.2-alpine3.14
 
-RUN apk update && apk add tesseract-ocr build-base
+RUN apk update && apk add tesseract-ocr build-base poppler
 
 RUN bundle config set deployment 'true'
 

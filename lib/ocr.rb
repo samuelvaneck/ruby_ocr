@@ -43,16 +43,19 @@ class OCR < Sinatra::Base
 
   post '/' do
     if params[:file]
-      save_file_to_public_foler(params[:file])
-      file_location = File.join(settings.files, params[:file][:filename])
-      lang = params[:language]
-      @text = file_to_text(file_location, lang)
+      save_file_to_public_folder(params[:file])
+      file_location = if params[:file][:type] == 'application/pdf'
+                        pdf_to_image(File.join(settings.files, params[:file][:filename]))
+                      else
+                        File.join(settings.files, params[:file][:filename])
+                      end
+      @text = file_to_text(file_location, params[:language])
+      remove_temp_files
 
       flash 'Upload successful'
     else
       flash 'You have to choose a file'
     end
-
     erb :index, { layout: :application }
   end
 
@@ -61,7 +64,7 @@ class OCR < Sinatra::Base
     image.to_s
   end
 
-  def save_file_to_public_foler(params_file)
+  def save_file_to_public_folder(params_file)
     filename = params_file[:filename]
     file = params_file[:tempfile]
 
@@ -69,5 +72,16 @@ class OCR < Sinatra::Base
       f.write file.read
     end
   end
-end
 
+  def pdf_to_image(pdf_file)
+    file_name = params[:file][:filename].split('.')[0].to_s
+    public_files = File.join(settings.files)
+
+    `cd #{public_files} && pdftoppm -jpeg -jpegopt quality=100 -r 300 #{pdf_file} #{file_name}`
+    "#{public_files}/#{file_name}-1.jpg"
+  end
+
+  def remove_temp_files
+    `cd #{File.join(settings.files)} && rm *`
+  end
+end
