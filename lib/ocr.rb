@@ -50,7 +50,7 @@ class OCR < Sinatra::Base
                  else
                    filename
                  end
-      @text = file_to_text(filename, params[:language])
+      @text = file_to_text(filename, params[:language], params[:psm])
       remove_temp_files
 
       flash 'Upload successful'
@@ -62,8 +62,8 @@ class OCR < Sinatra::Base
 
   private
 
-  def file_to_text(filename, lang = 'eng')
-    image = RTesseract.new(File.join(settings.files, filename), lang: lang, psm: 4)
+  def file_to_text(filename, lang = 'eng', psm = 4)
+    image = RTesseract.new(File.join(settings.files, filename), lang: lang, psm: psm)
     image.to_s
   end
 
