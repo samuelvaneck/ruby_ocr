@@ -22,6 +22,7 @@ GEM
       rack-protection (= 2.1.0)
       tilt (~> 2.0)
     tilt (2.0.10)
+    zaru (0.3.0)
 
 PLATFORMS
   x86_64-darwin-20
@@ -32,6 +33,7 @@ DEPENDENCIES
   puma
   rtesseract
   sinatra
+  zaru
 
 BUNDLED WITH
    2.2.22

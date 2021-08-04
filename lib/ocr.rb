@@ -3,6 +3,7 @@
 require 'rtesseract'
 require 'erb'
 require 'sinatra/base'
+require 'zaru'
 
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
@@ -43,13 +44,13 @@ class OCR < Sinatra::Base
 
   post '/' do
     if params[:file]
-      save_file_to_public_folder(params[:file])
-      file_location = if params[:file][:type] == 'application/pdf'
-                        pdf_to_image(File.join(settings.files, params[:file][:filename]))
-                      else
-                        File.join(settings.files, params[:file][:filename])
-                      end
-      @text = file_to_text(file_location, params[:language])
+      filename = save_file_to_public_folder(params[:file])
+      filename = if params[:file][:type] == 'application/pdf'
+                   pdf_to_image(File.join(settings.files, filename))
+                 else
+                   filename
+                 end
+      @text = file_to_text(filename, params[:language])
       remove_temp_files
 
       flash 'Upload successful'
@@ -59,26 +60,32 @@ class OCR < Sinatra::Base
     erb :index, { layout: :application }
   end
 
-  def file_to_text(file_location, lang = 'eng')
-    image = RTesseract.new(file_location, lang: lang)
+  private
+
+  def file_to_text(filename, lang = 'eng')
+    image = RTesseract.new(File.join(settings.files, filename), lang: lang, psm: 4)
     image.to_s
   end
 
   def save_file_to_public_folder(params_file)
     filename = params_file[:filename]
     file = params_file[:tempfile]
+    safe_filename = Zaru.sanitize!(filename).downcase.gsub(/\s/, '_')
 
-    File.open(File.join(settings.files, filename), 'wb') do |f|
-      f.write file.read
+    File.open(File.join(settings.files, safe_filename), 'wb') do |file_to_write|
+      file_to_write.write(file.read)
     end
+
+    safe_filename
   end
 
   def pdf_to_image(pdf_file)
-    file_name = params[:file][:filename].split('.')[0].to_s
+    filename = pdf_file.split('.')[0].to_s
     public_files = File.join(settings.files)
 
-    `cd #{public_files} && pdftoppm -jpeg -jpegopt quality=100 -r 300 #{pdf_file} #{file_name}`
-    "#{public_files}/#{file_name}-1.jpg"
+    `cd #{public_files} && pdftoppm -jpeg -jpegopt quality=100 -r 300 #{pdf_file} #{filename}`
+
+    "#{filename.split('/')[-1]}-1.jpg"
   end
 
   def remove_temp_files
