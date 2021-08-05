@@ -66,8 +66,10 @@ class OCR < Sinatra::Base
 
   def process_pdf_file(filename, params)
     filename, page_count = pdf_to_image(File.join(settings.files, filename))
+    rjust_value = page_count.to_s.split('').count
+
     (1..page_count).map do |page|
-      file_to_text("#{filename}-#{page}.jpg", params)
+      file_to_text("#{filename}-#{page.to_s.rjust(rjust_value, '0')}.jpg", params)
     end
   end
 
