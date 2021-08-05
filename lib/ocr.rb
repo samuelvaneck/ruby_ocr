@@ -47,14 +47,11 @@ class OCR < Sinatra::Base
   post '/' do
     if params[:file]
       filename = save_file_to_public_folder(params[:file])
-      filename = if params[:file][:type] == 'application/pdf'
-                   pdf_to_image(File.join(settings.files, filename))
-                 else
-                   filename
-                 end
-      preserve_interword_spaces = params[:preserve_interword_spaces] == 'on' ? 1 : 0
-      @text = file_to_text(filename, params[:language], params[:psm], params[:oem], preserve_interword_spaces)
-      @text = preserve_spaces_in_text(@text)
+      @text = if params[:file][:type] == 'application/pdf'
+                process_pdf_file(filename, params)
+              else
+                process_image_file(filename, params)
+              end
       remove_temp_files
 
       flash 'Upload successful'
@@ -66,14 +63,27 @@ class OCR < Sinatra::Base
 
   private
 
-  def file_to_text(filename, lang = 'eng', psm = 4, oem = 3, preserve_interword_spaces = 1)
+  def process_pdf_file(filename, params)
+    filename, page_count = pdf_to_image(File.join(settings.files, filename))
+    (1..page_count).map do |page|
+      file_to_text("#{filename}-#{page}.jpg", params)
+    end
+  end
+
+  def process_image_file(filename, params)
+    [file_to_text(filename, params)]
+  end
+
+  def file_to_text(filename, params)
+    preserve_interword_spaces = params[:preserve_interword_spaces] == 'on' ? 1 : 0
     file_location = File.join(settings.files, filename)
     image = RTesseract.new(file_location,
-                           lang: lang,
-                           psm: psm,
-                           oem: oem,
+                           lang: params[:language],
+                           psm: params[:psm],
+                           oem: params[:oem],
                            preserve_interword_spaces: preserve_interword_spaces)
-    image.to_s
+    text = image.to_s
+    preserve_spaces(text)
   end
 
   def save_file_to_public_folder(params_file)
@@ -95,14 +105,14 @@ class OCR < Sinatra::Base
 
     `cd #{public_files} && pdftoppm -jpeg -jpegopt quality=100 -r 300 #{pdf_file} #{filename}`
 
-    "#{filename.split('/')[-1]}-1.jpg"
+    [filename.split('/')[-1].to_s, page_count]
   end
 
   def remove_temp_files
     `cd #{File.join(settings.files)} && rm *`
   end
 
-  def preserve_spaces_in_text(text)
+  def preserve_spaces(text)
     text.gsub(' ', '&nbsp;')
   end
 

@@ -78,9 +78,20 @@
 <% unless @text.nil? %>
   <h2 class="my-3">Text</h2>
 
-  <ul class="mb-3 list-group">
-    <% @text.split("\n\n").each do |line| %>
-      <li class="list-group-item"><%= line %></li>
+    <% if @text.count == 1 %>
+      <ul class="mb-3 list-group">
+        <% @text[0].split("\n\n").each do |line| %>
+          <li class="list-group-item"><%= line %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <% @text.each_with_index do |page, idx| %>
+        <ul class="mb-3 list-group">
+          <li class="list-group-item list-group-item-primary">Page <%= idx + 1 %></li>
+          <% page.split("\n\n").each do |line| %>
+            <li class="list-group-item"><%= line %></li>
+          <% end %>
+        </ul>
+      <% end %>
     <% end %>
-  </ul>
 <% end %>
