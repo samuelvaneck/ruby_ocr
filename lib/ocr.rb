@@ -10,7 +10,7 @@ require 'pry'
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class OCR < Sinatra::Base
-  ENV['TESSDATA_PREFIX'] = File.join(File.dirname(__FILE__), 'tessdata')
+  SUPPORTED_FILES = ["image/png", "image/gif", "image/jpeg", "application/pdf"]
 
   configure do
     enable :static
@@ -47,14 +47,17 @@ class OCR < Sinatra::Base
   post '/' do
     if params[:file]
       filename = save_file_to_public_folder(params[:file])
-      @text = if params[:file][:type] == 'application/pdf'
-                process_pdf_file(filename, params)
-              else
-                process_image_file(filename, params)
-              end
-      remove_temp_files
+      if OCR::SUPPORTED_FILES.include?(params[:file][:type])
 
-      flash 'Upload successful'
+        @text = if params[:file][:type] == 'application/pdf'
+                  process_pdf_file(filename, params)
+                else
+                  process_image_file(filename, params)
+                end
+        remove_temp_files
+      else
+        flash 'Unsupported file type'
+      end
     else
       flash 'You have to choose a file'
     end
@@ -78,6 +81,7 @@ class OCR < Sinatra::Base
     preserve_interword_spaces = params[:preserve_interword_spaces] == 'on' ? 1 : 0
     file_location = File.join(settings.files, filename)
     image = RTesseract.new(file_location,
+                           tessdata: File.join(File.dirname(__FILE__), 'tessdata'),
                            lang: params[:language],
                            psm: params[:psm],
                            oem: params[:oem],
