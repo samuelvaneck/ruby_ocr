@@ -8,7 +8,7 @@ require 'zaru'
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class OCR < Sinatra::Base
-  SUPPORTED_FILES = ["image/png", "image/gif", "image/jpeg", "application/pdf"]
+  SUPPORTED_FILES = ['image/png', 'image/gif', 'image/jpeg', 'application/pdf'].freeze
 
   configure do
     enable :static

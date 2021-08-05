@@ -1,7 +1,7 @@
 <h2 class="my-3">Upload file</h2>
 <form action="/" method="POST" enctype="multipart/form-data">
   <div class="input-group my-3">
-    <input class="form-control" type="file" id="file" name="file" accept="image/png, image/gif, image/jpeg, application/pdf">
+    <input class="form-control" type="file" id="file" name="file" accept="image/png, image/gif, image/jpeg, application/pdf" />
     <div class="input-group-append">
       <button data-bs-target="#advanced-options" class='btn btn-secondary' data-bs-toggle="collapse" type="button">
         Advanced options
@@ -10,7 +10,7 @@
   </div>
 
   <div class="d-grid gap-2 my-3">
-    <input type="submit" value="Submit" class="btn btn-primary">
+    <input type="submit" value="Convert to text" class="btn btn-primary" id="convert-btn" />
   </div>
 
   <div class="collapse" id="advanced-options">
@@ -66,7 +66,7 @@
     </div>
 
     <div class="form-check form-switch">
-      <input class="form-check-input" type="checkbox" name="preserve_interword_spaces" id="presever-interword-spaces" checked>
+      <input class="form-check-input" type="checkbox" name="preserve_interword_spaces" id="presever-interword-spaces" checked />
       <label class="form-check-label" for="presever-interword-spaces">Preserver interword space</label>
     </div>
   </div>
@@ -74,6 +74,11 @@
 </form>
 
 <hr>
+
+<div class="d-none align-items-center" style='display:none' id='spinner-wrapper'>
+  <strong>Converting...</strong>
+  <div class="spinner-border text-primary ms-auto" role="status" aria-hidden="true"></div>
+</div>
 
 <% unless @text.nil? %>
   <h2 class="my-3">Text</h2>
@@ -87,7 +92,7 @@
     <% else %>
       <% @text.each_with_index do |page, idx| %>
         <ul class="mb-3 list-group">
-          <li class="list-group-item list-group-item-primary">Page <%= idx + 1 %></li>
+          <li class="list-group-item active">Page <%= idx + 1 %></li>
           <% page.split("\n\n").each do |line| %>
             <li class="list-group-item"><%= line %></li>
           <% end %>
