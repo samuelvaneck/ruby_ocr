@@ -5,8 +5,6 @@ require 'erb'
 require 'sinatra/base'
 require 'zaru'
 
-require 'pry'
-
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class OCR < Sinatra::Base
