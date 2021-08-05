@@ -5,6 +5,8 @@ require 'erb'
 require 'sinatra/base'
 require 'zaru'
 
+require 'pry'
+
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class OCR < Sinatra::Base
@@ -89,6 +91,7 @@ class OCR < Sinatra::Base
   def pdf_to_image(pdf_file)
     filename = pdf_file.split('.')[0].to_s
     public_files = File.join(settings.files)
+    page_count = pdf_page_count(pdf_file)
 
     `cd #{public_files} && pdftoppm -jpeg -jpegopt quality=100 -r 300 #{pdf_file} #{filename}`
 
@@ -101,5 +104,11 @@ class OCR < Sinatra::Base
 
   def preserve_spaces_in_text(text)
     text.gsub(' ', '&nbsp;')
+  end
+
+  def pdf_page_count(pdf_file)
+    info = `cd #{File.join(settings.files)} && pdfinfo #{pdf_file}`
+    pages_index = info.split(/\n/).index { |x| x if x.include? 'Pages: ' }
+    info.split(/\n/)[pages_index].delete('^0-9').to_i
   end
 end
