@@ -7,57 +7,65 @@
     </div>
   </div>
 
-  <div class="my-3">
-    <div><label for="language">Choose a language</label></div>
-    <div>
-      <select name="language" id="language" class="form-select">
-        <option value="eng" selected>English</option>
-        <option value="nld">Dutch</option>
-        <option value="fra">French</option>
-        <option value="ita">Italian</option>
-        <option value="deu">German</option>
-        <option value="por">Portuguese</option>
-        <option value="spa">Spanish</option>
-      </select>
-    </div>
+  <div class="d-grid gap-2 my-3">
+    <button data-bs-target="#advanced-options" class='btn btn-primary' data-bs-toggle="collapse" type="button">
+      Advanced options
+    </button>
   </div>
 
-
-  <div class="my-3 row">
-    <div class="col-sm-12 col-md-6">
-      <div><label for="psm">Text split mode</label></div>
+  <div class="collapse" id="advanced-options">
+    <div class="my-3">
+      <div><label for="language">Choose a language</label></div>
       <div>
-        <select name="psm" id="psm" class="form-select">
-          <option value="0">Orientation and script detection (OSD) only</option>
-          <option value="1">Automatic page segmentation with OSD</option>
-          <option value="2">Automatic page segmentation, but no OSD, or OCR</option>
-          <option value="3">Automatic page segmentation, but no OSD, or OCR</option>
-          <option value="4" selected>Assume a single column of text of variable sizes</option>
-          <option value="5">Assume a single uniform block of vertically aligned text</option>
-          <option value="6">Assume a single uniform block of text</option>
-          <option value="7">Treat the image as a single text line</option>
-          <option value="8">Treat the image as a single word</option>
-          <option value="9">Treat the image as a single word in a circle</option>
-          <option value="10">Treat the image as a single character</option>
-          <option value="11">Sparse text. Find as much text as possible in no particular order</option>
-          <option value="12">Sparse text with OSD</option>
-          <option value="13">Raw line. Treat the image as a single text line, bypassing hacks that are Tesseract-specific</option>
+        <select name="language" id="language" class="form-select">
+          <option value="eng" selected>English</option>
+          <option value="nld">Dutch</option>
+          <option value="fra">French</option>
+          <option value="ita">Italian</option>
+          <option value="deu">German</option>
+          <option value="por">Portuguese</option>
+          <option value="spa">Spanish</option>
         </select>
       </div>
     </div>
 
-    <div class="col-sm-12 col-md-6">
-      <div><label for="oem">Engine mode</label></div>
-      <div>
-        <select name="oem" id="oem" class="form-select">
-          <option value="0">Legacy engine only</option>
-          <option value="1">Neural nets LSTM engine only</option>
-          <option value="2">Legacy + LSTM engines</option>
-          <option value="3" selected>Default, based on what is available</option>
-        </select>
+    <div class="my-3 row">
+      <div class="col-sm-12 col-md-6">
+        <div><label for="psm">Text split mode</label></div>
+        <div>
+          <select name="psm" id="psm" class="form-select">
+            <option value="0">Orientation and script detection (OSD) only</option>
+            <option value="1">Automatic page segmentation with OSD</option>
+            <option value="2">Automatic page segmentation, but no OSD, or OCR</option>
+            <option value="3">Automatic page segmentation, but no OSD, or OCR</option>
+            <option value="4" selected>Assume a single column of text of variable sizes</option>
+            <option value="5">Assume a single uniform block of vertically aligned text</option>
+            <option value="6">Assume a single uniform block of text</option>
+            <option value="7">Treat the image as a single text line</option>
+            <option value="8">Treat the image as a single word</option>
+            <option value="9">Treat the image as a single word in a circle</option>
+            <option value="10">Treat the image as a single character</option>
+            <option value="11">Sparse text. Find as much text as possible in no particular order</option>
+            <option value="12">Sparse text with OSD</option>
+            <option value="13">Raw line. Treat the image as a single text line, bypassing hacks that are Tesseract-specific</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-md-6">
+        <div><label for="oem">Engine mode</label></div>
+        <div>
+          <select name="oem" id="oem" class="form-select">
+            <option value="0">Legacy engine only</option>
+            <option value="1">Neural nets LSTM engine only</option>
+            <option value="2">Legacy + LSTM engines</option>
+            <option value="3" selected>Default, based on what is available</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
+
 </form>
 
 <hr>
