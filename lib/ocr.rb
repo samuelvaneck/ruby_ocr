@@ -50,7 +50,9 @@ class OCR < Sinatra::Base
                  else
                    filename
                  end
-      @text = file_to_text(filename, params[:language], params[:psm], params[:oem])
+      preserve_interword_spaces = params[:preserve_interword_spaces] == 'on' ? 1 : 0
+      @text = file_to_text(filename, params[:language], params[:psm], params[:oem], preserve_interword_spaces)
+      @text = preserve_spaces_in_text(@text)
       remove_temp_files
 
       flash 'Upload successful'
@@ -62,8 +64,13 @@ class OCR < Sinatra::Base
 
   private
 
-  def file_to_text(filename, lang = 'eng', psm = 4, oem = 3)
-    image = RTesseract.new(File.join(settings.files, filename), lang: lang, psm: psm, oem: oem)
+  def file_to_text(filename, lang = 'eng', psm = 4, oem = 3, preserve_interword_spaces = 1)
+    file_location = File.join(settings.files, filename)
+    image = RTesseract.new(file_location,
+                           lang: lang,
+                           psm: psm,
+                           oem: oem,
+                           preserve_interword_spaces: preserve_interword_spaces)
     image.to_s
   end
 
@@ -90,5 +97,9 @@ class OCR < Sinatra::Base
 
   def remove_temp_files
     `cd #{File.join(settings.files)} && rm *`
+  end
+
+  def preserve_spaces_in_text(text)
+    text.gsub(' ', '&nbsp;')
   end
 end
