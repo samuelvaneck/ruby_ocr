@@ -1,5 +1,5 @@
 <h2 class="my-3">Upload file</h2>
-<form action="/" method="POST" enctype="multipart/form-data">
+<form action="/" method="POST" enctype="multipart/form-data" data-remote="true">
   <div class="input-group my-3">
     <input class="form-control" type="file" id="file" name="file" accept="image/png, image/gif, image/jpeg, application/pdf" />
     <div class="input-group-append">
@@ -81,22 +81,30 @@
 </div>
 
 <% unless @text.nil? %>
-  <h2 class="my-3">Text</h2>
+  <form action="/download" method="get" id="download-form">
+    <input name="full_text" value=<%= @text.to_s %> class="d-none" />
+    <div class="d-flex flex-row justify-content-end my-2">
+      <input class="btn btn-primary mx-2 submit-btn" type="submit" name="format" value="Download TXT" data-format="txt" />
+      <input class="btn btn-primary ml-2 submit-btn" type="submit" name="format" value="Download CSV" data-format="csv" />
+    </div>
 
-    <% if @text.count == 1 %>
+    <% @text.each_with_index do |page, p_idx| %>
       <ul class="mb-3 list-group">
-        <% @text[0].split("\n\n").each do |line| %>
-          <li class="list-group-item"><%= line %></li>
+        <% if @text.count > 1 %>
+          <li class="list-group-item active">Page <%= p_idx + 1 %></li>
+        <% end %>
+        <% page.split("\n").each_with_index do |line, l_idx| %>
+          <% next if line.empty? %>
+
+          <li class="list-group-item">
+            <div class="form-check">
+              <input type="checkbox" id="line_<%= p_idx %>_<%= l_idx %>" name="line" value="<%= line %>" class="form-check-input" />
+              <label for="line_<%= p_idx %>_<%= l_idx %>" class="ml-2" class="form-check-label"><%= line %></label>
+            </div>
+          </li>
         <% end %>
       </ul>
-    <% else %>
-      <% @text.each_with_index do |page, idx| %>
-        <ul class="mb-3 list-group">
-          <li class="list-group-item active">Page <%= idx + 1 %></li>
-          <% page.split("\n\n").each do |line| %>
-            <li class="list-group-item"><%= line %></li>
-          <% end %>
-        </ul>
-      <% end %>
     <% end %>
+  </form>
 <% end %>
+

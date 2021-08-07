@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'rtesseract'
 require 'erb'
+require 'json'
+require 'rtesseract'
 require 'sinatra/base'
 require 'zaru'
 
@@ -60,6 +61,24 @@ class OCR < Sinatra::Base
       flash 'You have to choose a file'
     end
     erb :index, { layout: :application }
+  end
+
+  post '/download' do
+    json = JSON.parse(request.body.read)
+    download_file = File.join(settings.files, "download.#{json['format']}")
+    File.open(download_file, 'wb') do |file_to_write|
+      text = if json['lines'].empty?
+               JSON.parse(json['full_text'][0])[0]
+             else
+               json['lines'].join("\n")
+             end
+
+      file_to_write.puts text
+    end
+    attachment
+    send_file(download_file, type: 'application/octet-stream')
+    remove_temp_files
+    redirect '/'
   end
 
   private
