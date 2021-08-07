@@ -90,6 +90,9 @@
 
     <% @text.each_with_index do |page, p_idx| %>
       <ul class="mb-3 list-group">
+        <li class="list-group-item">
+          <input type="checkbox" id="top-checkbox" name="top-checkbox" class="form-check-input" />
+        </li>
         <% if @text.count > 1 %>
           <li class="list-group-item active">Page <%= p_idx + 1 %></li>
         <% end %>
