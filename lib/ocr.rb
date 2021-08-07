@@ -72,7 +72,7 @@ class OCR < Sinatra::Base
              else
                json['lines'].join("\n")
              end
-
+      text = parse_csv(text) if json['format'] == 'csv'
       file_to_write.puts text
     end
     attachment
@@ -143,5 +143,11 @@ class OCR < Sinatra::Base
     info = `cd #{File.join(settings.files)} && pdfinfo #{pdf_file}`
     pages_index = info.split(/\n/).index { |x| x if x.include? 'Pages: ' }
     info.split(/\n/)[pages_index].delete('^0-9').to_i
+  end
+
+  def parse_csv(text)
+    text.split(/\n/).map do |line|
+      line.unicode_normalize(:nfkc).gsub(/\s{2}/, ',').squeeze(',').gsub(', ', ',')
+    end.join("\n")
   end
 end
