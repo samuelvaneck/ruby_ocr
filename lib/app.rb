@@ -64,17 +64,7 @@ class App < Sinatra::Base
 
   post '/download' do
     json = JSON.parse(request.body.read)
-    download_file = File.join(settings.files, "download.#{json['format']}")
-    File.open(download_file, 'wb') do |file_to_write|
-      text = if json['lines'].empty?
-               JSON.parse(JSON.parse(json['full_text']))[0]
-             else
-               json['lines'].join("\n")
-             end
-      text = parse_csv(text) if json['format'] == 'csv'
-      file_to_write.puts text
-    end
-    attachment
+    download_file = prepare_download_file(json)
     send_file(download_file, type: 'application/octet-stream')
     remove_temp_files
     redirect '/'
@@ -92,6 +82,20 @@ class App < Sinatra::Base
     end
 
     safe_filename
+  end
+
+  def prepare_download_file(json)
+    download_file = File.join(settings.files, "download.#{json['format']}")
+    File.open(download_file, 'wb') do |file_to_write|
+      text = if json['lines'].empty?
+               JSON.parse(JSON.parse(json['full_text']))[0]
+             else
+               json['lines'].join("\n")
+             end
+      text = parse_csv(text) if json['format'] == 'csv'
+      file_to_write.puts text
+    end
+    download_file
   end
 
   def remove_temp_files
