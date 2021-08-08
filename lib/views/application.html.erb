@@ -8,6 +8,13 @@
   </head>
 
   <body class="container">
+    <% if !session[:flash].nil? %>
+      <div class="d-flex flex-row my-2">
+        <ul class="list-group py-2 w-100">
+          <li class="list-group-item list-group-item-primary"><%= session[:flash] %></hli>
+        </ul>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
