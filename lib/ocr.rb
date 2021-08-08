@@ -49,9 +49,9 @@ class OCR < Sinatra::Base
       if OCR::SUPPORTED_FILES.include?(params[:file][:type])
 
         @text = if params[:file][:type] == 'application/pdf'
-                  process_pdf_file(filename, params)
+                  process_pdf_file(filename, params).to_json
                 else
-                  process_image_file(filename, params)
+                  process_image_file(filename, params).to_json
                 end
         remove_temp_files
       else
@@ -68,7 +68,7 @@ class OCR < Sinatra::Base
     download_file = File.join(settings.files, "download.#{json['format']}")
     File.open(download_file, 'wb') do |file_to_write|
       text = if json['lines'].empty?
-               JSON.parse(json['full_text'][0])[0]
+               JSON.parse(JSON.parse(json['full_text']))[0]
              else
                json['lines'].join("\n")
              end
@@ -105,8 +105,7 @@ class OCR < Sinatra::Base
                            psm: params[:psm],
                            oem: params[:oem],
                            preserve_interword_spaces: preserve_interword_spaces)
-    text = image.to_s
-    preserve_spaces(text)
+    image.to_s
   end
 
   def save_file_to_public_folder(params_file)
@@ -147,7 +146,7 @@ class OCR < Sinatra::Base
 
   def parse_csv(text)
     text.split(/\n/).map do |line|
-      line.unicode_normalize(:nfkc).gsub(/\s{2}/, ',').squeeze(',').gsub(', ', ',')
+      line.gsub(/\s{2}/, ',').squeeze(',').gsub(', ', ',')
     end.join("\n")
   end
 end

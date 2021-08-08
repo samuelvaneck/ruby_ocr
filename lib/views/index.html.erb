@@ -82,18 +82,18 @@
 
 <% unless @text.nil? %>
   <form action="/download" method="get" id="download-form">
-    <input name="full_text" value=<%= @text.to_s %> class="d-none" />
+    <input name="full_text" value='<%= Base64.strict_encode64(@text) %>' class="d-none" id="full-text" />
     <div class="d-flex flex-row justify-content-end my-2">
       <input class="btn btn-primary mx-2 submit-btn" type="submit" name="format" value="Download TXT" data-format="txt" />
       <input class="btn btn-primary ml-2 submit-btn" type="submit" name="format" value="Download CSV" data-format="csv" />
     </div>
 
-    <% @text.each_with_index do |page, p_idx| %>
+    <% JSON.parse(@text).each_with_index do |page, p_idx| %>
       <ul class="mb-3 list-group">
         <li class="list-group-item">
           <input type="checkbox" id="top-checkbox" name="top-checkbox" class="form-check-input" />
         </li>
-        <% if @text.count > 1 %>
+        <% if JSON.parse(@text).count > 1 %>
           <li class="list-group-item active">Page <%= p_idx + 1 %></li>
         <% end %>
         <% page.split("\n").each_with_index do |line, l_idx| %>
@@ -102,7 +102,7 @@
           <li class="list-group-item">
             <div class="form-check">
               <input type="checkbox" id="line_<%= p_idx %>_<%= l_idx %>" name="line" value="<%= line %>" class="form-check-input" />
-              <label for="line_<%= p_idx %>_<%= l_idx %>" class="ml-2" class="form-check-label"><%= line %></label>
+              <label for="line_<%= p_idx %>_<%= l_idx %>" class="ml-2" class="form-check-label"><%= line.gsub(' ', '&nbsp;') %></label>
             </div>
           </li>
         <% end %>
