@@ -3,7 +3,7 @@
 require File.expand_path('../../ocr.rb', __FILE__)
 
 class OCR::PDF < OCR
-  def process_pdf_file
+  def process_file
     @filename, page_count = pdf_to_image(File.join(@settings.files, @filename))
     rjust_value = page_count.to_s.split('').count
 

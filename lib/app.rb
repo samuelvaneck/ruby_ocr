@@ -46,11 +46,12 @@ class App < Sinatra::Base
     if params[:file]
       if OCR::SUPPORTED_FILES.include?(params[:file][:type])
         filename = save_file_to_public_folder(params[:file])
-        @text = if params[:file][:type] == 'application/pdf'
-                  OCR::PDF.new(filename, params, settings).process_pdf_file.to_json
-                else
-                  OCR::Image.new(filename, params, settings).process_image_file.to_json
-                end
+        ocr_engine = if params[:file][:type] == 'application/pdf'
+                       OCR::PDF.new(filename, params, settings)
+                     else
+                       OCR::Image.new(filename, params, settings)
+                     end
+        @text = ocr_engine.process_file.to_json
         remove_temp_files
       else
         flash 'Unsupported file type'
