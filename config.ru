@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 require 'bundler'
-require_relative 'lib/ocr'
+require_relative 'lib/app'
 
-run OCR
+run App
