@@ -52,7 +52,7 @@ class App < Sinatra::Base
                        OCR::Image.new(filename, params, settings)
                      end
         @text = ocr_engine.process_file.to_json
-        # remove_temp_files
+        remove_temp_files
       else
         flash 'Unsupported file type'
       end

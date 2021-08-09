@@ -2,8 +2,10 @@
 
 require 'rtesseract'
 require 'zaru'
+
 class OCR
   SUPPORTED_FILES = ['image/png', 'image/gif', 'image/jpeg', 'application/pdf'].freeze
+  ENV['TESSDATA_PREFIX'] = File.join(File.dirname(__FILE__), 'tessdata')
 
   attr_reader :filename, :params
 
@@ -17,7 +19,6 @@ class OCR
     preserve_interword_spaces = params[:preserve_interword_spaces] == 'on' ? 1 : 0
     file_location = File.join(@settings.files, filename)
     image = RTesseract.new(file_location,
-                           tessdata: File.join(File.dirname(__FILE__), 'tessdata'),
                            lang: params[:language],
                            psm: params[:psm],
                            oem: params[:oem],
