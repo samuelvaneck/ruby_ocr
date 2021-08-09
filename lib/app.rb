@@ -52,7 +52,7 @@ class App < Sinatra::Base
                        OCR::Image.new(filename, params, settings)
                      end
         @text = ocr_engine.process_file.to_json
-        remove_temp_files
+        # remove_temp_files
       else
         flash 'Unsupported file type'
       end
@@ -75,13 +75,18 @@ class App < Sinatra::Base
   def save_file_to_public_folder(params_file)
     filename = params_file[:filename]
     file = params_file[:tempfile]
-    safe_filename = Zaru.sanitize!(filename).downcase.gsub(/\s/, '_')
+    safe_filename = sanitize_filename(filename)
 
     File.open(File.join(settings.files, safe_filename), 'wb') do |file_to_write|
       file_to_write.write(file.read)
     end
 
     safe_filename
+  end
+
+  def sanitize_filename(filename)
+    name, extension = filename.reverse.split('.', 2).map(&:reverse).reverse
+    "#{Zaru.sanitize!(name).downcase.gsub(/\W/, '_')}.#{extension}"
   end
 
   def prepare_download_file(json)
