@@ -1,5 +1,4 @@
-FROM ruby:3.0.2-alpine3.14
-
+FROM ruby:3.0.3-alpine3.15
 RUN apk update && apk add tesseract-ocr build-base poppler-utils
 RUN wget https://github.com/google/fonts/archive/main.tar.gz -O gf.tar.gz && \
   tar -xf gf.tar.gz && \
