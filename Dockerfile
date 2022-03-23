@@ -1,5 +1,5 @@
 FROM ruby:3.1.1-alpine3.15
-RUN apk update && apk add tesseract-ocr build-base poppler-utils
+RUN apk update && apk add tesseract-ocr build-base poppler-utils curl
 RUN wget https://github.com/google/fonts/archive/main.tar.gz -O gf.tar.gz && \
   tar -xf gf.tar.gz && \
   mkdir -p /usr/share/fonts/truetype/google-fonts && \
