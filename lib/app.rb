@@ -7,6 +7,11 @@ require_relative 'ocr'
 require_relative 'ocr/pdf'
 require_relative 'ocr/image'
 
+if Sinatra::Base.development?
+  require 'dotenv/load'
+  require 'pry'
+end
+
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class App < Sinatra::Base
