@@ -16,7 +16,7 @@ This app uses the Tesseract OCR for converting images into plain text
 
 ## Run in development
 ```
-  bundle exec rackup config.ru
+  bundle exec rerun -b -- rackup
 ```
 
 ## Open your browser
