@@ -16,9 +16,9 @@ GEM
       method_source (~> 1.0)
     puma (6.3.0)
       nio4r (~> 2.0)
-    rack (2.2.6.4)
-    rack-protection (3.0.6)
-      rack
+    rack (2.2.8)
+    rack-protection (3.1.0)
+      rack (~> 2.2, >= 2.2.4)
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -26,12 +26,12 @@ GEM
       listen (~> 3.0)
     rtesseract (3.1.2)
     ruby2_keywords (0.0.5)
-    sinatra (3.0.6)
+    sinatra (3.1.0)
       mustermann (~> 3.0)
       rack (~> 2.2, >= 2.2.4)
-      rack-protection (= 3.0.6)
+      rack-protection (= 3.1.0)
       tilt (~> 2.0)
-    tilt (2.1.0)
+    tilt (2.2.0)
     zaru (1.0.0)
 
 PLATFORMS
