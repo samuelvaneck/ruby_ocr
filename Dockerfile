@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ruby:3.3.0-alpine3.18
+FROM --platform=linux/amd64 ruby:3.4.2-alpine3.21
 
 RUN apk update && apk add tesseract-ocr build-base poppler-utils curl
 RUN wget https://github.com/google/fonts/archive/main.tar.gz -O gf.tar.gz && \
