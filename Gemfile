@@ -6,6 +6,7 @@ ruby '3.3.0'
 
 gem 'puma'
 gem 'rtesseract'
+gem 'rackup'
 gem 'sinatra'
 gem 'zaru'
 
